@@ -1250,6 +1250,243 @@
   </div><!-- /cards -->
 </div><!-- /container -->
 
+<hr style="border:none;border-top:2px solid #e0dbd3;margin:0">
+<!-- POLL SECTION -->
+<div id="poll-section" style="max-width:1200px;margin:0 auto;padding:0 20px 60px;">
+  <h2 class="section-title" style="font-size:1.5rem;font-weight:800;color:#2d5a27;border-bottom:3px solid #6ab04c;padding-bottom:10px;margin-bottom:24px;">
+    🗳️ Stem voor jouw top 3!
+  </h2>
+  <p style="font-size:0.9rem;color:#555;margin-bottom:20px;">Elke familie brengt één stem uit. Kies je <strong>top 3 favorieten</strong> en klik op Stem.</p>
+
+  <div id="poll-name-step">
+    <div style="background:white;border-radius:12px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.08);max-width:400px;margin-bottom:24px;">
+      <label style="font-weight:700;font-size:0.9rem;display:block;margin-bottom:8px;">👨‍👩‍👧‍👦 Naam van jullie familie:</label>
+      <input id="family-name" type="text" placeholder="bv. Familie Wynants" 
+        style="width:100%;padding:10px 14px;border:2px solid #ddd;border-radius:8px;font-size:1rem;outline:none;transition:border 0.2s;"
+        onfocus="this.style.borderColor='#4a8f3f'" onblur="this.style.borderColor='#ddd'">
+      <button onclick="startVoting()" style="margin-top:12px;background:#2d5a27;color:white;border:none;padding:10px 24px;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;width:100%;">
+        Doorgaan →
+      </button>
+    </div>
+  </div>
+
+  <div id="poll-vote-step" style="display:none;">
+    <p style="font-size:0.85rem;color:#888;margin-bottom:16px;">Selecteer je <strong>top 3</strong> (klik op een locatie):</p>
+    <div id="poll-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:24px;"></div>
+    <button onclick="submitVote()" style="background:#2d5a27;color:white;border:none;padding:12px 32px;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;">
+      ✅ Stem uitbrengen
+    </button>
+    <button onclick="cancelVoting()" style="background:#eee;color:#555;border:none;padding:12px 20px;border-radius:10px;font-size:0.9rem;font-weight:600;cursor:pointer;margin-left:10px;">
+      Annuleren
+    </button>
+  </div>
+
+  <div id="poll-results" style="margin-top:32px;"></div>
+
+  <div id="poll-status" style="margin-top:12px;font-size:0.85rem;color:#888;"></div>
+</div>
+
+<style>
+.poll-card { background:white;border:2px solid #e0e0e0;border-radius:10px;padding:12px 14px;cursor:pointer;transition:all 0.15s;user-select:none; }
+.poll-card:hover { border-color:#6ab04c;background:#f9fff8; }
+.poll-card.selected { border-color:#2d5a27;background:#e8f5e9; }
+.poll-card .pnum { font-size:1.1rem;font-weight:800;color:#6ab04c; }
+.poll-card .pname { font-size:0.85rem;font-weight:700;color:#2d2d2d;margin-top:2px; }
+.poll-card .ploc { font-size:0.75rem;color:#888; }
+.result-bar { height:28px;background:#e8f5e9;border-radius:6px;margin-bottom:8px;overflow:hidden;position:relative; }
+.result-fill { height:100%;background:linear-gradient(90deg,#2d5a27,#6ab04c);border-radius:6px;transition:width 0.6s ease; }
+.result-label { position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:0.78rem;font-weight:700;color:white;white-space:nowrap; }
+.result-count { position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:0.78rem;font-weight:700;color:#2d5a27; }
+</style>
+
+<script>
+// ===== CONFIG =====
+const SUPABASE_URL = 'https://yyixjdaubphijsmqfltr.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5aXhqZGF1YnBoaWpzbXFmbHRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgwMzIzNzgsImV4cCI6MjA4MzYwODM3OH0.utwNK0sTeoXDdJgiEim_UcLfTBbe4EA2wVE5TqBNtjc';
+
+const LOCATIONS = [
+  {num:1,name:'Coo',loc:'Ardennen'},
+  {num:2,name:'Ferme des Bisons',loc:'Bastenaken'},
+  {num:3,name:'Stavelot',loc:'Coo'},
+  {num:4,name:'Herenhuis Néblon',loc:'Luik'},
+  {num:5,name:'Teuven',loc:'Voerstreek'},
+  {num:6,name:'Bladel',loc:'Noord-Brabant'},
+  {num:7,name:'Ravels',loc:'Kempen'},
+  {num:8,name:'Malmedy',loc:'Ardennen'},
+  {num:9,name:'Spakasteel',loc:'Spa'},
+  {num:10,name:'Gite Saint Donat',loc:'Rendeux'},
+  {num:11,name:'Landhuis Heibloem',loc:'Leudal'},
+  {num:12,name:'Zeeland',loc:'Scharendijke'},
+  {num:13,name:'Blegny',loc:'Luik'},
+  {num:14,name:'Hoge Venen-Eifel',loc:'Büllingen'},
+  {num:15,name:'Prachtvink',loc:'Voerstreek NL'},
+  {num:16,name:'Hoeve Hurpesh',loc:'Mechelen NL'},
+  {num:17,name:'Warandehof',loc:'Gooik'},
+  {num:18,name:'Villa Mosa',loc:'Wanze'},
+  {num:19,name:'Grandeur Nature',loc:'Hombourg'},
+];
+
+let selectedNums = [];
+let currentFamily = '';
+
+function dbFetch(path, opts={}) {
+  return fetch(SUPABASE_URL + '/rest/v1/' + path, {
+    ...opts,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': opts.method === 'POST' ? 'return=minimal' : undefined,
+      ...opts.headers
+    }
+  });
+}
+
+function startVoting() {
+  const name = document.getElementById('family-name').value.trim();
+  if (!name) { alert('Vul eerst jullie familienaam in!'); return; }
+  currentFamily = name;
+  selectedNums = [];
+  document.getElementById('poll-name-step').style.display = 'none';
+  document.getElementById('poll-vote-step').style.display = 'block';
+  renderPollGrid();
+}
+
+function cancelVoting() {
+  document.getElementById('poll-vote-step').style.display = 'none';
+  document.getElementById('poll-name-step').style.display = 'block';
+  selectedNums = [];
+}
+
+function renderPollGrid() {
+  const grid = document.getElementById('poll-grid');
+  grid.innerHTML = LOCATIONS.map(l => `
+    <div class="poll-card ${selectedNums.includes(l.num)?'selected':''}" id="pc-${l.num}" onclick="toggleVote(${l.num})">
+      <div class="pnum">#${l.num} ${selectedNums.indexOf(l.num)!==-1?'★'.repeat(3-selectedNums.indexOf(l.num)):''}</div>
+      <div class="pname">${l.name}</div>
+      <div class="ploc">${l.loc}</div>
+    </div>
+  `).join('');
+}
+
+function toggleVote(num) {
+  const idx = selectedNums.indexOf(num);
+  if (idx !== -1) {
+    selectedNums.splice(idx, 1);
+  } else {
+    if (selectedNums.length >= 3) {
+      document.getElementById('poll-status').textContent = '⚠️ Je kan max 3 locaties kiezen. Deselecteer er één eerst.';
+      return;
+    }
+    selectedNums.push(num);
+  }
+  document.getElementById('poll-status').textContent = `${selectedNums.length}/3 gekozen`;
+  renderPollGrid();
+}
+
+async function submitVote() {
+  if (selectedNums.length === 0) { alert('Selecteer minstens 1 locatie!'); return; }
+  
+  const btn = document.querySelector('#poll-vote-step button');
+  btn.disabled = true;
+  btn.textContent = '⏳ Bezig...';
+  document.getElementById('poll-status').textContent = 'Stem wordt opgeslagen...';
+
+  try {
+    // Insert one row per selected location with rank
+    const rows = selectedNums.map((num, i) => ({
+      family_name: currentFamily,
+      location_number: num,
+      location_name: LOCATIONS.find(l=>l.num===num)?.name,
+      rank: i + 1
+    }));
+
+    const res = await dbFetch('vakantie_votes', {
+      method: 'POST',
+      body: JSON.stringify(rows)
+    });
+
+    if (res.ok || res.status === 201) {
+      document.getElementById('poll-vote-step').style.display = 'none';
+      document.getElementById('poll-status').textContent = `✅ Stem van ${currentFamily} ontvangen! Bedankt 🎉`;
+      await loadResults();
+    } else {
+      const err = await res.text();
+      throw new Error(err);
+    }
+  } catch(e) {
+    document.getElementById('poll-status').textContent = '❌ Fout bij opslaan: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = '✅ Stem uitbrengen';
+  }
+}
+
+async function loadResults() {
+  try {
+    const res = await dbFetch('vakantie_votes?select=location_number,location_name,family_name,rank');
+    const votes = await res.json();
+    
+    if (!Array.isArray(votes) || votes.length === 0) {
+      document.getElementById('poll-results').innerHTML = '<p style="color:#888;font-size:0.85rem;">Nog geen stemmen uitgebracht.</p>';
+      return;
+    }
+
+    // Count weighted votes (rank 1 = 3pts, rank 2 = 2pts, rank 3 = 1pt)
+    const scores = {};
+    const voteCounts = {};
+    const familyVotes = {};
+    
+    votes.forEach(v => {
+      const key = v.location_number;
+      scores[key] = (scores[key] || 0) + (4 - (v.rank || 1));
+      voteCounts[key] = (voteCounts[key] || 0) + 1;
+      if (!familyVotes[v.family_name]) familyVotes[v.family_name] = [];
+      if (!familyVotes[v.family_name].includes(key)) familyVotes[v.family_name].push(key);
+    });
+
+    const sorted = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+    const maxScore = sorted[0]?.[1] || 1;
+    const families = Object.keys(familyVotes);
+
+    let html = `
+      <h3 style="font-size:1.1rem;font-weight:800;color:#2d5a27;margin-bottom:16px;">📊 Resultaten — ${families.length} familie${families.length!==1?'s':''} gestemd</h3>
+      <p style="font-size:0.8rem;color:#888;margin-bottom:16px;">Puntensysteem: 1e keuze = 3pt · 2e keuze = 2pt · 3e keuze = 1pt</p>
+    `;
+
+    sorted.slice(0, 10).forEach(([num, score], i) => {
+      const loc = LOCATIONS.find(l=>l.num==num);
+      const pct = Math.round((score/maxScore)*100);
+      const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+      html += `
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span style="font-size:0.85rem;font-weight:700;">${medal} #${num} ${loc?.name}</span>
+            <span style="font-size:0.78rem;color:#888;">${voteCounts[num]} stem${voteCounts[num]!==1?'men':''}</span>
+          </div>
+          <div class="result-bar">
+            <div class="result-fill" style="width:${pct}%"></div>
+            <span class="result-label">${score} punten</span>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `<div style="margin-top:16px;padding:12px;background:#f5f5f5;border-radius:8px;font-size:0.8rem;color:#666;">
+      <strong>Gestemd:</strong> ${families.join(', ')}
+    </div>`;
+
+    document.getElementById('poll-results').innerHTML = html;
+  } catch(e) {
+    document.getElementById('poll-results').innerHTML = '<p style="color:#c0392b;font-size:0.85rem;">Kon resultaten niet laden: ' + e.message + '</p>';
+  }
+}
+
+// Load results on page load
+loadResults();
+// Refresh every 30 seconds
+setInterval(loadResults, 30000);
+</script>
+
 <footer>
   Overzicht op basis van Excel — 19 locaties · Prijzen voor weekend 26-28 feb 2027 · Beschikbaarheid handmatig te controleren via de links
 </footer>
@@ -1380,3 +1617,5 @@ document.addEventListener('keydown', e => { if (e.key==='Escape') closeLightbox(
 </script>
 </body>
 </html>
+
+<!-- INJECT POLL SECTION MARKER - will be replaced by script -->
