@@ -94,6 +94,21 @@
   .section-gap { margin-bottom: 50px; }
   hr.divider { border: none; border-top: 2px solid #e0dbd3; margin: 40px 0; }
   footer { text-align: center; padding: 30px; color: #888; font-size: 0.85rem; background: #2d5a27; color: rgba(255,255,255,0.6); }
+
+  /* GALLERY */
+  .gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 22px; border-radius: 10px; overflow: hidden; }
+  .gallery img { width: 100%; aspect-ratio: 4/3; object-fit: cover; cursor: pointer; transition: opacity 0.2s; }
+  .gallery img:hover { opacity: 0.88; }
+  .gallery img:first-child { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; }
+
+  /* LIGHTBOX */
+  .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 9999; align-items: center; justify-content: center; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 8px; object-fit: contain; }
+  .lightbox-close { position: fixed; top: 20px; right: 28px; color: white; font-size: 2.5rem; cursor: pointer; line-height: 1; }
+  .lightbox-prev, .lightbox-next { position: fixed; top: 50%; transform: translateY(-50%); color: white; font-size: 2.5rem; cursor: pointer; padding: 10px 18px; background: rgba(255,255,255,0.1); border-radius: 8px; user-select: none; }
+  .lightbox-prev { left: 10px; }
+  .lightbox-next { right: 10px; }
 </style>
 </head>
 <body>
@@ -137,7 +152,7 @@
             <td><span class="tag tag-green">🏊 Binnen</span></td>
             <td><span class="tag tag-red">❌ Nee</span></td>
             <td><span class="tag tag-orange">Meebrengen</span></td>
-            <td class="price">€2.047<span class="price-note">+ ±€300 verbruik</span></td>
+            <td class="price">€1.507–€1.787<span class="price-note">+ ±€300 verbruik · seizoensafh.</span></td>
             <td><span class="avail-check">🔗 Check site</span></td>
           </tr>
           <tr>
@@ -163,7 +178,7 @@
             <td><span class="tag tag-orange">🧖 Wellness</span></td>
             <td><span class="tag tag-gray">Op aanvr.</span></td>
             <td><span class="tag tag-orange">Meebrengen</span></td>
-            <td class="price">€2.932</td>
+            <td class="price">€1.799–€2.125<span class="price-note">seizoensafh.</span></td>
             <td><span class="avail-check">🔗 Check site</span></td>
           </tr>
           <tr>
@@ -251,11 +266,17 @@
           <div class="subtitle">📍 Petit-Coo (nabij Stavelot), Ardennen · 1u36 rijden</div>
         </div>
         <div class="card-price-badge">
-          <div class="price-big">€2.047</div>
-          <div class="price-small">+ ±€300 verbruik</div>
+          <div class="price-big">€1.507–€1.787</div>
+          <div class="price-small">+ ±€300 verbruik · seizoensafh.</div>
         </div>
       </div>
       <div class="avail-banner check-needed">🔗 Beschikbaarheid controleren via casapilot.com/nl/1090308</div>
+      <div class="gallery" data-gallery="petit-coo">
+        <img src="https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036559/image-33034c877030856509c266ed3b82aa6425d-slider.jpeg" alt="Petit-Coo 1" onclick="openLightbox('petit-coo',0)">
+        <img src="https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036559/image-32938159a3118d986b3a208718ab30b41f2-slider.jpeg" alt="Petit-Coo 2" onclick="openLightbox('petit-coo',1)">
+        <img src="https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036559/image-33191076b2e36decdbf3f5141f9f6f37203-slider.jpeg" alt="Petit-Coo 3" onclick="openLightbox('petit-coo',2)">
+        <img src="https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036559/image-332041dc5da4b3fafe1aa5f704182c8b5c9-slider.jpeg" alt="Petit-Coo 4" onclick="openLightbox('petit-coo',3)">
+      </div>
       <div class="stat-row">
         <div class="stat"><div class="num">26</div><div class="lbl">Personen</div></div>
         <div class="stat"><div class="num">8</div><div class="lbl">Slaapkamers</div></div>
@@ -312,6 +333,12 @@
         </div>
       </div>
       <div class="avail-banner check-needed">🔗 Beschikbaarheid controleren via casapilot.com/nl/1091005</div>
+      <div class="gallery" data-gallery="malmedy">
+        <img src="https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036602/image-4011ef89fa2bbe3e4c2d5bd6fb4d7bae4e5-slider.jpeg" alt="Malmedy 1" onclick="openLightbox('malmedy',0)">
+        <img src="https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036602/image-42883518d021b1658064df25ae88070d63c-slider.jpeg" alt="Malmedy 2" onclick="openLightbox('malmedy',1)">
+        <img src="https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036602/image-4296a7ec20a96590fbca45705c5a7cec194-slider.jpeg" alt="Malmedy 3" onclick="openLightbox('malmedy',2)">
+        <img src="https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036602/image-387b89e70e7a7358f58af997d44a952c240-slider.jpeg" alt="Malmedy 4" onclick="openLightbox('malmedy',3)">
+      </div>
       <div class="stat-row">
         <div class="stat"><div class="num">27</div><div class="lbl">Personen</div></div>
         <div class="stat"><div class="num">11</div><div class="lbl">Slaapkamers</div></div>
@@ -367,11 +394,17 @@
           <div class="subtitle">📍 Büllingen, Naturpark Hohes Venn-Eifel · 1u50 rijden</div>
         </div>
         <div class="card-price-badge">
-          <div class="price-big">€2.932</div>
-          <div class="price-small">weekend</div>
+          <div class="price-big">€1.799–€2.125</div>
+          <div class="price-small">seizoensafh.</div>
         </div>
       </div>
       <div class="avail-banner check-needed">🔗 Beschikbaarheid controleren via casapilot.com/nl/1090646</div>
+      <div class="gallery" data-gallery="bullingen">
+        <img src="https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036597/image-12938b33c8c5636bdd94fecbf2a888f707b-slider.jpeg" alt="Büllingen 1" onclick="openLightbox('bullingen',0)">
+        <img src="https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036597/image-128c9a8c328e43b020aa7633956e687aeea-slider.jpeg" alt="Büllingen 2" onclick="openLightbox('bullingen',1)">
+        <img src="https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036537/image-004b4548c01a89cbd4d06c52f10b6b51a7f-slider.jpeg" alt="Büllingen 3" onclick="openLightbox('bullingen',2)">
+        <img src="https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036536/image-98235bf7b8a141bc77159ed42b25fcd9bac-slider.jpeg" alt="Büllingen 4" onclick="openLightbox('bullingen',3)">
+      </div>
       <div class="stat-row">
         <div class="stat"><div class="num">30</div><div class="lbl">Personen</div></div>
         <div class="stat"><div class="num">10</div><div class="lbl">Slaapkamers</div></div>
@@ -476,6 +509,14 @@
         </div>
       </div>
       <div class="avail-banner warning">⚠️ Max 25 personen — krap voor 26-27 mensen. Navragen of uitzondering mogelijk.</div>
+      <div class="gallery" data-gallery="ferme">
+        <img src="https://images.squarespace-cdn.com/content/v1/5fce236c2cf4ad19c3ab0b4e/1610020417141-8A5EQYK835H987U4SRYO/IMG_1605.jpeg" alt="Ferme 1" onclick="openLightbox('ferme',0)">
+        <img src="https://images.squarespace-cdn.com/content/v1/5fce236c2cf4ad19c3ab0b4e/1610100154459-QUKJTZFB3LAU0WMECNY9/%C2%A92015-Bea-1040.jpg" alt="Ferme 2" onclick="openLightbox('ferme',1)">
+        <img src="https://images.squarespace-cdn.com/content/v1/5fce236c2cf4ad19c3ab0b4e/1610100062791-G77XKBR6HNBVFALM1I6H/Salon+Ranch+2.jpg" alt="Ferme 3" onclick="openLightbox('ferme',2)">
+        <img src="https://images.squarespace-cdn.com/content/v1/5fce236c2cf4ad19c3ab0b4e/1610100706232-8QWE8SJIN4YVCO9TW3AW/Cuisine+Ranch.jpg" alt="Ferme 4" onclick="openLightbox('ferme',3)">
+        <img src="https://images.squarespace-cdn.com/content/v1/5fce236c2cf4ad19c3ab0b4e/1610100063833-SYJY8VP552ABQEU4GQF3/Salon+ranch.jpg" alt="Ferme 5" onclick="openLightbox('ferme',4)">
+        <img src="https://images.squarespace-cdn.com/content/v1/5fce236c2cf4ad19c3ab0b4e/1610100107577-0WYA9WTHU25EIJ4K724P/IMG_1213.jpeg" alt="Ferme 6" onclick="openLightbox('ferme',5)">
+      </div>
       <div class="stat-row">
         <div class="stat"><div class="num">25</div><div class="lbl">Personen</div></div>
         <div class="stat"><div class="num">10</div><div class="lbl">Kamers</div></div>
@@ -572,5 +613,71 @@
   Overzicht samengesteld op basis van beschikbare informatie — 2 maart 2026 · Prijzen voor weekend 26-28 feb 2027 · Altijd beschikbaarheid verifiëren op de boekingssite
 </footer>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <span class="lightbox-close" onclick="closeLightbox()">×</span>
+  <span class="lightbox-prev" onclick="lbNav(-1);event.stopPropagation()">‹</span>
+  <img id="lightbox-img" src="" alt="">
+  <span class="lightbox-next" onclick="lbNav(1);event.stopPropagation()">›</span>
+</div>
+
+<script>
+const galleries = {
+  'petit-coo': [
+    'https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036559/image-33034c877030856509c266ed3b82aa6425d-slider.jpeg',
+    'https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036559/image-32938159a3118d986b3a208718ab30b41f2-slider.jpeg',
+    'https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036559/image-33191076b2e36decdbf3f5141f9f6f37203-slider.jpeg',
+    'https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036559/image-332041dc5da4b3fafe1aa5f704182c8b5c9-slider.jpeg',
+  ],
+  'malmedy': [
+    'https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036602/image-4011ef89fa2bbe3e4c2d5bd6fb4d7bae4e5-slider.jpeg',
+    'https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036602/image-42883518d021b1658064df25ae88070d63c-slider.jpeg',
+    'https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036602/image-4296a7ec20a96590fbca45705c5a7cec194-slider.jpeg',
+    'https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036602/image-387b89e70e7a7358f58af997d44a952c240-slider.jpeg',
+  ],
+  'bullingen': [
+    'https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036597/image-12938b33c8c5636bdd94fecbf2a888f707b-slider.jpeg',
+    'https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036597/image-128c9a8c328e43b020aa7633956e687aeea-slider.jpeg',
+    'https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036537/image-004b4548c01a89cbd4d06c52f10b6b51a7f-slider.jpeg',
+    'https://www.casapilot.com/cfle/images/accommodation-gallery-teaser/property_images/036536/image-98235bf7b8a141bc77159ed42b25fcd9bac-slider.jpeg',
+  ],
+  'ferme': [
+    'https://images.squarespace-cdn.com/content/v1/5fce236c2cf4ad19c3ab0b4e/1610020417141-8A5EQYK835H987U4SRYO/IMG_1605.jpeg',
+    'https://images.squarespace-cdn.com/content/v1/5fce236c2cf4ad19c3ab0b4e/1610100154459-QUKJTZFB3LAU0WMECNY9/%C2%A92015-Bea-1040.jpg',
+    'https://images.squarespace-cdn.com/content/v1/5fce236c2cf4ad19c3ab0b4e/1610100062791-G77XKBR6HNBVFALM1I6H/Salon+Ranch+2.jpg',
+    'https://images.squarespace-cdn.com/content/v1/5fce236c2cf4ad19c3ab0b4e/1610100706232-8QWE8SJIN4YVCO9TW3AW/Cuisine+Ranch.jpg',
+    'https://images.squarespace-cdn.com/content/v1/5fce236c2cf4ad19c3ab0b4e/1610100063833-SYJY8VP552ABQEU4GQF3/Salon+ranch.jpg',
+    'https://images.squarespace-cdn.com/content/v1/5fce236c2cf4ad19c3ab0b4e/1610100107577-0WYA9WTHU25EIJ4K724P/IMG_1213.jpeg',
+  ],
+};
+
+let currentGallery = null;
+let currentIndex = 0;
+
+function openLightbox(gallery, idx) {
+  currentGallery = gallery;
+  currentIndex = idx;
+  document.getElementById('lightbox-img').src = galleries[gallery][idx];
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox(e) {
+  if (!e || e.target === document.getElementById('lightbox')) {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+}
+
+function lbNav(dir) {
+  const imgs = galleries[currentGallery];
+  currentIndex = (currentIndex + dir + imgs.length) % imgs.length;
+  document.getElementById('lightbox-img').src = imgs[currentIndex];
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox({target: document.getElementById('lightbox')});
+  if (e.key === 'ArrowRight') lbNav(1);
+  if (e.key === 'ArrowLeft') lbNav(-1);
+});
+</script>
 </body>
 </html>
